@@ -9,7 +9,7 @@ type IndexedType<T> = { [key: string]: T };
 type IWorldStore = {
     // currentWorld: World;
     chunks: IndexedType<Chunk>;
-    chunkMeshes: IndexedType<THREE.Geometry>;
+    chunkMeshes: IndexedType<THREE.BufferGeometry>;
     emptyMeshes: IndexedType<boolean>;
     loadChunks: (world: World, initialChunkPosition: Position, renderDistance: number) => void;
     generateChunkMeshes: (world: World) => void;
@@ -66,7 +66,7 @@ export const worldStore = create<IWorldStore>((set, get) => ({
 
     generateChunkMeshes: (world: World) => {
         const chunks = get().chunks;
-        let meshes: IndexedType<THREE.Geometry> = {};
+        let meshes: IndexedType<THREE.BufferGeometry> = {};
         let empty: IndexedType<boolean> = {}; 
 
         let i = 0;
@@ -94,8 +94,8 @@ export const worldStore = create<IWorldStore>((set, get) => ({
                 }
 
                 // Empty but not visible at all.
-                let mesh = WorldRenderer.generateMeshFromChunk(world, chunk, adjacent);
-                if (mesh.vertices.length === 0) {
+                let mesh = WorldRenderer.generateBufferMeshFromChunk(world, chunk, adjacent);
+                if (mesh.getAttribute('position').array.length === 0) {
                     empty[id] = true;
                 } else {
                     meshes[id] = mesh;

@@ -24,8 +24,8 @@ function ChunkBorder({ chunkSize }: ChunkBorderProps) {
 
 const WORLD_SIZE: number = 256;
 const CHUNK_SIZE: number = 16;
-const CHUNK_HEIGHT: number = 32;
-const RENDER_DISTANCE: number = 4;
+const CHUNK_HEIGHT: number = 16;
+const RENDER_DISTANCE: number = 8;
 
 const world: World  = new World(CHUNK_SIZE, CHUNK_HEIGHT, [
     {

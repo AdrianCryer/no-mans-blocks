@@ -42,6 +42,12 @@ export class PerlinNoiseTerrainGenerator implements TerrainGenerator {
                 let height = yHeight1 + yHeight2;
 
                 for (let y = chunk.position.y * world.chunkHeight; y < height; y++) {
+
+                    // Caves
+                    if (this.generator.perlin3(xPos / 100, (y + chunk.position.y * world.chunkSize) / 100, zPos / 100) > caveWidthThreshold) {
+                        chunk.data[world.getChunkLookupKey(x, y - chunk.position.y * world.chunkSize, z)] = world.blocks[0];
+                        break;
+                    }
                     if (y - chunk.position.y * world.chunkHeight > world.chunkHeight - 1) {
                         break;
                     }
@@ -49,12 +55,6 @@ export class PerlinNoiseTerrainGenerator implements TerrainGenerator {
                     isEmpty = false;
                 }
                 
-                // .... this could make it empty.. Oh well
-                // for (let y = chunk.position.y * world.chunkSize; y < height; y++) {
-                //     if (this.generator.perlin3(xPos / 100, (y + chunk.position.y * world.chunkSize) / 100, zPos / 100) > caveWidthThreshold) {
-                //         chunk.data[world.getChunkLookupKey(x, y - chunk.position.y * world.chunkSize, z)] = world.blocks[0];
-                //     }
-                // }
             }
         }
         return isEmpty;

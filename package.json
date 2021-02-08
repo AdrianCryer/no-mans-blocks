@@ -1,15 +1,26 @@
 {
-  "name": "steven",
+  "name": "no-mans-blocks",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-three/cannon": "^0.5.3",
+    "@react-three/drei": "^3.1.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.22",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "noisejs": "^2.1.0",
+    "perlin-noise-3d": "^0.5.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
-    "web-vitals": "^0.2.4"
+    "react-three-fiber": "^5.3.18",
+    "three": "^0.124",
+    "web-vitals": "^0.2.4",
+    "zustand": "^3.3.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,5 +45,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
   }
 }

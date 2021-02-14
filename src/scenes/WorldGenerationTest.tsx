@@ -24,8 +24,9 @@ function ChunkBorder({ chunkSize }: ChunkBorderProps) {
 
 const WORLD_SIZE: number = 256;
 const CHUNK_SIZE: number = 16;
-const CHUNK_HEIGHT: number = 16;
+const CHUNK_HEIGHT: number = 32;
 const RENDER_DISTANCE: number = 8;
+const RENDER_HEIGHT: number = 2;
 
 const world: World  = new World(CHUNK_SIZE, CHUNK_HEIGHT, [
     {
@@ -57,11 +58,10 @@ export const WorldGenerationTest = (props: any) => {
                 if (chunkPos.x !== currentChunkPos.current.x ||
                     chunkPos.y !== currentChunkPos.current.y ||
                     chunkPos.z !== currentChunkPos.current.z ) {
-                    
-                    currentChunkPos.current = chunkPos;
-                    worldStore.getState().loadChunks(world, chunkPos, RENDER_DISTANCE);
+                        
+                    worldStore.getState().loadChunks(world, chunkPos, RENDER_DISTANCE, RENDER_HEIGHT);
                     worldStore.getState().generateChunkMeshes(world);
-                    console.log("upodated");
+                    currentChunkPos.current = chunkPos;
                 }
             }
         }

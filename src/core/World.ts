@@ -16,9 +16,9 @@ export default class World {
     }
 
     public createChunk(position: Position): Chunk {
-        let data = new Array<BlockType>(Math.pow(this.chunkSize, 2) * this.chunkHeight);
-        for (let i = 0; i < data.length; i++) {
-            data[i] = this.blocks[0];
+        let data = new Array<BlockType>();
+        for (let i = 0; i < Math.pow(this.chunkSize, 2) * this.chunkHeight; i++) {
+            data.push(this.blocks[0]);
         }
         let chunk: Chunk = { position, data };
         let isEmpty = this.generator.generateChunk(this, chunk);

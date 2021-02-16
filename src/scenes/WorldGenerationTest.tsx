@@ -6,6 +6,7 @@ import { World, BLOCK_AIR, Chunk, Position } from '../core';
 import grass from '../assets/grass.jpg';
 import { PerlinNoiseTerrainGenerator } from '../core/TerrainGenerator';
 import { worldStore } from '../core/WorldStore';
+import { PerlinNoiseGenerator } from '../core/textures/Texture';
 
 
 interface ChunkBorderProps {
@@ -36,10 +37,59 @@ const world: World  = new World(CHUNK_SIZE, CHUNK_HEIGHT, [
 ], new PerlinNoiseTerrainGenerator(50, 50, WORLD_SIZE / 8, 100));
 
 
+function generateGradientTexture() {
+    const width = 32;
+    const height = 32;
+
+    const data = new Uint8Array(3 * width * height);
+    const colour = new THREE.Color(0xffffff);
+
+    const r = Math.floor( colour.r * 255 );
+    const g = Math.floor( colour.g * 255 );
+    const b = Math.floor( colour.b * 255 );
+
+    for ( let i = 0; i < width * height; i ++ ) {
+        const stride = i * 3;
+        data[ stride ] = i / (width * height) * 255;
+        data[ stride + 1 ] = g;
+        data[ stride + 2 ] = b;
+    }
+
+    return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
+}
+
+function generatePerlinTexture() {
+    const width = 128;
+    const height = 128;
+
+    const data = new Uint8Array(3 * width * height);
+    const colour = new THREE.Color(0xffffff);
+
+    const r = Math.floor( colour.r * 255 );
+    const g = Math.floor( colour.g * 255 );
+    const b = Math.floor( colour.b * 255 );
+
+    const generator = new PerlinNoiseGenerator(100);
+
+
+    for ( let i = 0; i < width * height; i++ ) {
+        const stride = i * 3;
+        const n = generator.generate2D(i / width / 50, (i % width / 50));
+        console.log(n)
+        data[ stride ]     = (n * 256);
+        data[ stride + 1 ] = (n * 256);
+        data[ stride + 2 ] = (n * 256);
+    }
+
+    return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
+}
+
+
 export const WorldGenerationTest = (props: any) => {
 
     const texture = useLoader(THREE.TextureLoader, grass)
     const grassTexture = useMemo(() => new THREE.MeshStandardMaterial({ map: texture }), [])
+    const perlinTexture = useMemo(() => new THREE.MeshStandardMaterial({ map: generatePerlinTexture() }), [])
 
     const player = useRef<FlyControls>();
     const currentChunkPos = useRef({ x: 0, y: 0, z: 0});
@@ -78,7 +128,7 @@ export const WorldGenerationTest = (props: any) => {
             {/* <OrbitControls listenToKeyEvents={undefined}/> */}
             <Suspense fallback={null}>
                 <group>
-                    {Object.values(chunkMeshes).map(mesh => <mesh key={mesh.uuid} args={[mesh, grassTexture]} position={[0, 0, 0]} />)}
+                    {Object.values(chunkMeshes).map(mesh => <mesh key={mesh.uuid} args={[mesh, perlinTexture]} position={[0, 0, 0]} />)}
                 </group>
             </Suspense>
             

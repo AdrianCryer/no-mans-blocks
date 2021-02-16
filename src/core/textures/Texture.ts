@@ -39,27 +39,27 @@ export class PerlinNoiseGenerator {
         let h = hash & 7;
         let u = h < 4 ? x : y;
         let v = 2 * (h < 4 ? y : x);
-        return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+        return (h & 1 ? u : -u) + (h & 2 ? v : -v);
     }
 
     generate2D(x: number, y: number): number {
         let fx = Math.floor(x);
         let fy = Math.floor(y);
-        let fracx = x - fx;
-        let fracy = y - fy;
+        let dx = x - fx;
+        let dy = y - fy;
 
-        let u = this.fade(x);
+        let u = this.fade(dx);
         const offset = 0xdeadbeef; 
 
-        let g1 = this.gradient2D(hashlittle(new Uint16Array([fx, fy]), offset), fracx, fracy);
-        let g2 = this.gradient2D(hashlittle(new Uint16Array([fx + 1, fy]), offset), fracx - 1, fracy);
-        let g3 = this.gradient2D(hashlittle(new Uint16Array([fx, fy + 1]), offset), fracx, fracy - 1);
-        let g4 = this.gradient2D(hashlittle(new Uint16Array([fx + 1, fy + 1]), offset), fracx - 1, fracy - 1);
+        let g1 = this.gradient2D(hashlittle(new Uint8Array([fx, fy])),          dx,      dy);
+        let g2 = this.gradient2D(hashlittle(new Uint8Array([fx + 1, fy])),      dx - 1,  dy);
+        let g3 = this.gradient2D(hashlittle(new Uint8Array([fx, fy + 1])),      dx,      dy - 1);
+        let g4 = this.gradient2D(hashlittle(new Uint8Array([fx + 1, fy + 1])),  dx - 1,  dy - 1);
 
         return this.lerp(
             this.lerp(g1, g2, u),
             this.lerp(g3, g4, u),
-            this.fade(y)
+            this.fade(dy)
         );
     }
 

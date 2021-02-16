@@ -1,6 +1,4 @@
 declare module 'jenkins-hash' {
-    // import { hashlittle } from 'jenkins-hash';
 
-
-    export function hashlittle(buffer: Array, initialValue: number): number;
+    export function hashlittle(buffer: Array, initialValue?: number): number;
 }

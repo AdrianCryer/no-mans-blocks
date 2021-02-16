@@ -1,6 +1,7 @@
 import { useRef, useEffect, Suspense } from "react"
 import { Canvas } from "react-three-fiber"
 import { WorldGenerationTest } from "./scenes/WorldGenerationTest"
+import { CanvasImageTest } from "./scenes/CanvasImageTest";
 
 
 function App(props: any) {
@@ -29,11 +30,12 @@ function App(props: any) {
 	return (
 		<>
 			<div ref={debugRef} className="fps" />
-			<Canvas concurrent={true} shadowMap gl={{ alpha: false }} camera={{ fov: 80 }}>
+			{/* <Canvas concurrent={true} shadowMap gl={{ alpha: false }} camera={{ fov: 80 }}>
 				<Suspense fallback="LOADING">
 					<WorldGenerationTest />
 				</Suspense>
-			</Canvas>
+			</Canvas> */}
+			<CanvasImageTest/>
 		</>
 	)
 }

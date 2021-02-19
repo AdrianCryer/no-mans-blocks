@@ -1,37 +1,31 @@
 import { hashlittle } from "jenkins-hash";
 import { ProceduralProperties, ProceduralTexture } from "../ProceduralTexture";
 import seedrandom from 'seedrandom';
+import XXH, { HashObject } from 'xxhashjs';
 
 export class WhiteNoise implements ProceduralTexture {
 
     properties: ProceduralProperties;
-    random: seedrandom.prng;
+    h: HashObject;
 
     constructor(properties: ProceduralProperties) {
         this.properties = properties;
-        this.random = seedrandom(properties.seed.toString());
+        this.h = XXH.h32(properties.seed);
     }
 
-    // random(hash: number) {
-        // return this.random.quick();
-        // return hash / 0xFFFFFFFF;
-        // return Math.random()
-    // }
+    random(hash: number) {
+        return hash / 0xFFFFFFFF;
+    }
 
     generate2D(x: number, y: number): number {
-        // return this.random(this.hash([x, y]));
-        // console.log(this.random.quick());
-        return this.random.quick();
-        // return 0;
+        return this.random(this.hash([x, y]));
     }
 
     generate4D(x: number, y: number, z: number, w: number): number {
-        // return this.random(this.hash([x, y, z, w]));
-        return this.random.quick()
-        return 0;
+        return this.random(this.hash([x, y, z, w]));
     }
 
     hash(uints: number[]): number {
-        return hashlittle(new Uint32Array(uints));
+        return this.h.update(Buffer.from(uints)).digest().toNumber();
     }
 }

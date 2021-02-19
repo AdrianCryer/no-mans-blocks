@@ -24,7 +24,7 @@ export const CanvasImageTest = (props: any) => {
         let offset = 0;
         let frame = -1;
         const tilingPeriod = 2;
-        const scale = 5;
+        const scale = 1;
 
         function renderLoop() {
             if (canvas === null || !context) {
@@ -52,7 +52,7 @@ export const CanvasImageTest = (props: any) => {
                 }
             }
             context.putImageData(image, 0, 0);
-            offset += 0.2;
+            offset += 0.5;
             frame = requestAnimationFrame(renderLoop)
         }
         renderLoop()

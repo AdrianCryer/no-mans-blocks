@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { PerlinNoiseGenerator } from '../core/texture-engine/Texture';
+import { PerlinNoise } from '../core/texture-engine/textures/PerlinNoise';
 import { WhiteNoise } from '../core/texture-engine/textures/WhiteNoise';
 let { Noise } = require('noisejs'); 
 
@@ -18,13 +18,14 @@ export const CanvasImageTest = (props: any) => {
         let image = context.createImageData(canvas.width, canvas.height);
         let data = image.data;
         // const gen = new PerlinNoiseGenerator(1000);
-        const gen = new WhiteNoise({ seed: 1000 });
+        // const gen = new WhiteNoise({ seed: 1000 });
+        const gen = new PerlinNoise({ seed: 1000 });
         // const noise = new Noise(1000);
 
         let offset = 0;
         let frame = -1;
-        const tilingPeriod = 2;
-        const scale = 1;
+        const tilingPeriod = 1;
+        const scale = 2;
 
         function renderLoop() {
             if (canvas === null || !context) {
@@ -38,13 +39,14 @@ export const CanvasImageTest = (props: any) => {
                     let mz = Math.cos(y / canvas.height * 2 * Math.PI * tilingPeriod);
                     let mw = Math.sin(y / canvas.height * 2 * Math.PI * tilingPeriod);
 
-                    // let value =  128 * (1 + gen.generate4D(mx * scale + offset, my * scale + offset, mz * scale + offset, mw * scale + offset));
+                    let value =  128 * (1 + gen.generate4D(mx * scale + offset, my * scale + offset, mz * scale + offset, mw * scale + offset));
                     // let value =  128 * (1 + gen.generate4D(mx + offset, my + offset, mz + offset, mw + offset));
-                    let value =  256 * ( gen.generate2D(x + offset, y));
+                    // let value =  128 * (1 + gen.generate2D(x / 5 + offset, y / 5 + offset));
+                    // let value =  256 * ( gen.generate2D(x + offset, y));
                     // console.log(value)
                     // let value = 128 * (1 + noise.perlin2(x / 20, y / 20));
-                    if (value > 128)
-                        value /= 1.2
+                    // if (value > 128)
+                    //     value /= 1.2
     
                     let cell = (x + y * canvas.width) * 4;;
                     data[cell] = data[cell + 1] = data[cell + 2] = value;
@@ -52,8 +54,8 @@ export const CanvasImageTest = (props: any) => {
                 }
             }
             context.putImageData(image, 0, 0);
-            offset += 0.5;
-            frame = requestAnimationFrame(renderLoop)
+            // offset += 0.05;
+            // frame = requestAnimationFrame(renderLoop)
         }
         renderLoop()
 

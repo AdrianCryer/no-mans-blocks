@@ -1,6 +1,4 @@
-import { hashlittle } from "jenkins-hash";
 import { ProceduralProperties, ProceduralTexture } from "../ProceduralTexture";
-import seedrandom from 'seedrandom';
 import XXH, { HashObject } from 'xxhashjs';
 
 export class WhiteNoise implements ProceduralTexture {

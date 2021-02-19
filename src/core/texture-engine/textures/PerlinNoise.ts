@@ -1,20 +1,22 @@
 import { hashlittle } from "jenkins-hash";
+import XXH, { HashObject } from 'xxhashjs';
 import { ProceduralProperties, ProceduralTexture } from "../ProceduralTexture";
 
-
 export interface PerlinNoiseProperties extends ProceduralProperties {
-    scale: number;
-    roughness: number;
-    detail: number;
-    distortion: number;
+    scale?: number;
+    roughness?: number;
+    detail?: number;
+    distortion?: number;
 }
 
 export class PerlinNoise implements ProceduralTexture {
 
     properties: PerlinNoiseProperties;
+    h: HashObject;
 
     constructor(properties: PerlinNoiseProperties) {
         this.properties = properties;
+        this.h = XXH.h32(properties.seed);
     }
 
     fade(t: number) {
@@ -127,7 +129,11 @@ export class PerlinNoise implements ProceduralTexture {
         );
     }
 
+    // hash(uints: number[]): number {
+    //     return hashlittle(new Uint8Array(uints));
+    // }
+
     hash(uints: number[]): number {
-        return hashlittle(new Uint8Array(uints));
+        return this.h.update(Buffer.from(uints)).digest().toNumber();
     }
 }

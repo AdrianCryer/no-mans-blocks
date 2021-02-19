@@ -1,5 +1,5 @@
 import { BlockType, Position, Chunk, BLOCK_AIR } from '.';
-import { TerrainGenerator } from './TerrainGenerator';
+import { TerrainGenerator } from '../TerrainGenerator';
 
 export default class World {
 

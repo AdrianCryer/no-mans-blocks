@@ -1,30 +1,20 @@
 import { hashlittle } from "jenkins-hash";
+import { ProceduralProperties, ProceduralTexture } from "../ProceduralTexture";
 
 
-export interface Texture {
-    size: number;
-
+export interface PerlinNoiseProperties extends ProceduralProperties {
+    scale: number;
+    roughness: number;
+    detail: number;
+    distortion: number;
 }
 
-interface TextureProperty {
-    name: String;
-}
+export class PerlinNoise implements ProceduralTexture {
 
-// Want to somehow measure a bunch of properties
-// Blend
-// Smoothness
-// Tiling
-// 
-/**
- * TextureAnalyser
- */
+    properties: PerlinNoiseProperties;
 
-export class PerlinNoiseGenerator {
-
-    seed: number;
-
-    constructor(seed: number) {
-        this.seed = seed;
+    constructor(properties: PerlinNoiseProperties) {
+        this.properties = properties;
     }
 
     fade(t: number) {
@@ -71,7 +61,7 @@ export class PerlinNoiseGenerator {
     }
 
     
-    generate4D(x: number, y: number, z: number, w: number) {
+    generate4D(x: number, y: number, z: number, w: number): number {
         let fx = Math.floor(x);
         let fy = Math.floor(y);
         let fz = Math.floor(z);
@@ -139,14 +129,5 @@ export class PerlinNoiseGenerator {
 
     hash(uints: number[]): number {
         return hashlittle(new Uint8Array(uints));
-    }
-}
-
-
-
-class TextureGenerator {
-
-    static noise() {
-
     }
 }

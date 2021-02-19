@@ -2,11 +2,11 @@ import { useMemo, useRef, useEffect, useState, Suspense } from 'react'
 import { useFrame, useLoader } from "react-three-fiber"
 import { Sky, OrbitControls, FlyControls } from "@react-three/drei"
 import * as THREE from "three";
-import { World, BLOCK_AIR, Chunk, Position } from '../core';
+import { World, BLOCK_AIR, Chunk, Position } from '../core/world';
 import grass from '../assets/grass.jpg';
 import { PerlinNoiseTerrainGenerator } from '../core/TerrainGenerator';
-import { worldStore } from '../core/WorldStore';
-import { PerlinNoiseGenerator } from '../core/textures/Texture';
+import { worldStore } from '../core/world/WorldStore';
+import { PerlinNoiseGenerator } from '../core/texture-engine/Texture';
 
 
 interface ChunkBorderProps {

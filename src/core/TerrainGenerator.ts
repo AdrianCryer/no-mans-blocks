@@ -1,4 +1,4 @@
-import { BlockType, Chunk, World } from '.';
+import { BlockType, Chunk, World } from './world';
 let { Noise } = require('noisejs');     // Typescript defs not working...
 
 export interface TerrainGenerator {

@@ -1,7 +1,7 @@
 import create from 'zustand';
 import * as THREE from "three";
-import { World, Chunk, Position } from '.';
 import { WorldRenderer } from './WorldRenderer';
+import { World, Chunk, Position } from '.';
 
 
 type IndexedType<T> = { [key: string]: T };

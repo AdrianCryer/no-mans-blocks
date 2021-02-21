@@ -6,7 +6,7 @@ import { World, BLOCK_AIR, Chunk, Position } from '../core/world';
 import grass from '../assets/grass.jpg';
 import { PerlinNoiseTerrainGenerator } from '../core/TerrainGenerator';
 import { worldStore } from '../core/world/WorldStore';
-import { PerlinNoiseGenerator } from '../core/texture-engine/Texture';
+import { PerlinNoise } from '../core/texture-engine/textures/PerlinNoise';
 
 
 interface ChunkBorderProps {
@@ -26,7 +26,7 @@ function ChunkBorder({ chunkSize }: ChunkBorderProps) {
 const WORLD_SIZE: number = 256;
 const CHUNK_SIZE: number = 16;
 const CHUNK_HEIGHT: number = 32;
-const RENDER_DISTANCE: number = 8;
+const RENDER_DISTANCE: number = 16;
 const RENDER_HEIGHT: number = 2;
 
 const world: World  = new World(CHUNK_SIZE, CHUNK_HEIGHT, [
@@ -37,63 +37,17 @@ const world: World  = new World(CHUNK_SIZE, CHUNK_HEIGHT, [
 ], new PerlinNoiseTerrainGenerator(50, 50, WORLD_SIZE / 8, 100));
 
 
-function generateGradientTexture() {
-    const width = 32;
-    const height = 32;
-
-    const data = new Uint8Array(3 * width * height);
-    const colour = new THREE.Color(0xffffff);
-
-    const r = Math.floor( colour.r * 255 );
-    const g = Math.floor( colour.g * 255 );
-    const b = Math.floor( colour.b * 255 );
-
-    for ( let i = 0; i < width * height; i ++ ) {
-        const stride = i * 3;
-        data[ stride ] = i / (width * height) * 255;
-        data[ stride + 1 ] = g;
-        data[ stride + 2 ] = b;
-    }
-
-    return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
-}
-
-function generatePerlinTexture() {
-    const width = 128;
-    const height = 128;
-
-    const data = new Uint8Array(3 * width * height);
-    const colour = new THREE.Color(0xffffff);
-
-    const r = Math.floor( colour.r * 255 );
-    const g = Math.floor( colour.g * 255 );
-    const b = Math.floor( colour.b * 255 );
-
-    const generator = new PerlinNoiseGenerator(100);
-
-
-    for ( let i = 0; i < width * height; i++ ) {
-        const stride = i * 3;
-        const n = generator.generate2D(i / width / 50, (i % width / 50));
-        console.log(n)
-        data[ stride ]     = (n * 256);
-        data[ stride + 1 ] = (n * 256);
-        data[ stride + 2 ] = (n * 256);
-    }
-
-    return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
-}
-
-
 export const WorldGenerationTest = (props: any) => {
 
     const texture = useLoader(THREE.TextureLoader, grass)
-    const grassTexture = useMemo(() => new THREE.MeshStandardMaterial({ map: texture }), [])
-    const perlinTexture = useMemo(() => new THREE.MeshStandardMaterial({ map: generatePerlinTexture() }), [])
+    const grassTexture = useMemo(() => new THREE.MeshStandardMaterial({ map: texture }), []);
+    const [requiresUpdate, setRequiresUpdate] = useState(false);
+    // const perlinTexture = useMemo(() => new THREE.MeshStandardMaterial({ map: generatePerlinTexture() }), [])
 
     const player = useRef<FlyControls>();
     const currentChunkPos = useRef({ x: 0, y: 0, z: 0});
-    const chunkMeshes = worldStore(state => state.chunkMeshes);
+    const chunkMeshes = worldStore(state => state.getChunkMeshes(world, currentChunkPos.current, RENDER_DISTANCE, RENDER_HEIGHT));
+    // const chunkMeshesRef = useRef(worldStore.getState().chunkMeshes);
 
     useFrame(() => {
         if (player.current !== undefined && player.current.object !== undefined) {
@@ -108,10 +62,10 @@ export const WorldGenerationTest = (props: any) => {
                 if (chunkPos.x !== currentChunkPos.current.x ||
                     chunkPos.y !== currentChunkPos.current.y ||
                     chunkPos.z !== currentChunkPos.current.z ) {
-                        
-                    worldStore.getState().loadChunks(world, chunkPos, RENDER_DISTANCE, RENDER_HEIGHT);
-                    worldStore.getState().generateChunkMeshes(world);
+                    
                     currentChunkPos.current = chunkPos;
+                    worldStore.getState().loadChunks(world, currentChunkPos.current, RENDER_DISTANCE, RENDER_HEIGHT);
+                    worldStore.getState().generateChunkMeshes(world, currentChunkPos.current, RENDER_DISTANCE, RENDER_HEIGHT);
                 }
             }
         }
@@ -128,12 +82,12 @@ export const WorldGenerationTest = (props: any) => {
             {/* <OrbitControls listenToKeyEvents={undefined}/> */}
             <Suspense fallback={null}>
                 <group>
-                    {Object.values(chunkMeshes).map(mesh => <mesh key={mesh.uuid} args={[mesh, perlinTexture]} position={[0, 0, 0]} />)}
+                    {chunkMeshes.map(mesh => <mesh key={mesh.uuid} args={[mesh, grassTexture]} position={[0, 0, 0]} />)}
                 </group>
             </Suspense>
             
             <axesHelper args={[100]}/>
-            <ChunkBorder chunkSize={CHUNK_SIZE} />
+            {/* <ChunkBorder chunkSize={CHUNK_SIZE} /> */}
         </>
     );
 }

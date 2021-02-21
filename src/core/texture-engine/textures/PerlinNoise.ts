@@ -1,4 +1,3 @@
-import { hashlittle } from "jenkins-hash";
 import XXH, { HashObject } from 'xxhashjs';
 import { ProceduralProperties, ProceduralTexture } from "../ProceduralTexture";
 

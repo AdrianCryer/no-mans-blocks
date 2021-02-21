@@ -30,12 +30,12 @@ function App(props: any) {
 	return (
 		<>
 			<div ref={debugRef} className="fps" />
-			{/* <Canvas concurrent={true} shadowMap gl={{ alpha: false }} camera={{ fov: 80 }}>
+			<Canvas camera={{ fov: 80 }}>
 				<Suspense fallback="LOADING">
 					<WorldGenerationTest />
 				</Suspense>
-			</Canvas> */}
-			<CanvasImageTest/>
+			</Canvas>
+			{/* <CanvasImageTest/> */}
 		</>
 	)
 }
